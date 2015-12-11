@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+exec /usr/bin/env ruby -x "$0" $*
+#!ruby
+# encoding: UTF-8
+
+require 'rubygems'
+require 'bundler/setup'
+
+ROOT_PATH=File.dirname(File.expand_path('../', __FILE__))
+$LOAD_PATH.unshift File.join(ROOT_PATH, 'lib')
+STDOUT.sync = true
+
+Bundler.require(:default)
+require 'pry'
+
+require 'open3'
+require 'marty'
+
+if RUBY_VERSION < '1.9.3'
+  abort "error: need ruby higher than 1.9.3"
+end
+
+module Marty
+end
+
+if $0 == __FILE__
+  Marty::MainCommand.run
+end

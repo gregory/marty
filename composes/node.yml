@@ -1,0 +1,23 @@
+consul:
+  container_name: consul
+  image: progrium/consul
+  restart: always
+  net: host # We need to start on host to be able to advertise port on bridge
+  ports:
+    - ${NODE_IP}:8301:8301
+    - ${NODE_IP}:8301:8301/udp
+    - 172.17.0.1:8500:8500 #http - we dont want to expose that outside
+    - 172.17.0.1:53:8600/udp #dns
+  command: --server -advertise $NODE_IP -join $CONSUL_IP # advertise NODE_IP and join CONSUL_IP
+  labels:
+    - constraint:type==node
+
+registrator:
+  container_name: registrator
+  net: host
+  image: gliderlabs/registrator:latest
+  volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+  command: -ip $NODE_IP consul://172.17.0.1:8500 # advertise NODE_IP and connect to the local consul
+  labels:
+    - constraint:type==node

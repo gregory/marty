@@ -1,0 +1,17 @@
+consul:
+  image: progrium/consul
+  container_name: consul
+  net: host # We need to start on host to be able to advertise port on bridge
+  restart: always
+  ports:
+    - ${NODE_IP}:8300:8300
+    - ${NODE_IP}:8301:8301
+    - ${NODE_IP}:8301:8301/udp
+    - ${NODE_IP}:8302:8302
+    - ${NODE_IP}:8302:8302/udp
+    - ${NODE_IP}:8400:8400 # rpc
+    - ${NODE_IP}:8500:8500 #http - we want this only to be able to go to the UI :)
+    - 172.17.0.1:53:8600/udp #dns
+  command: --server -bootstrap-expect 1 -advertise $NODE_IP -ui-dir /ui
+  labels:
+    - constraint:type==grid
