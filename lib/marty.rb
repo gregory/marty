@@ -11,6 +11,10 @@ module Marty
   end
 
   class MainCommand < Clamp::Command
+    DOCKER_MACHINE_VERSION="0.6.0-rc1"
+    DOCKER_COMPOSE_VERSION="1.6.0-rc1"
+    DOCKER_VERSION="1.1.0-rc1"
+
     subcommand "create", "Create things" do
       subcommand "grid", "Create a new grid", Marty::Grid::Create
       subcommand "node", "Create a new node", Marty::Nodes::Create
@@ -44,6 +48,20 @@ module Marty
         cmd << " --filter swarm=#{name}" if name
         system(cmd)
       end
+    end
+
+    subcommand "upgrade", "upgrade docker-*" do
+      def execute
+        system("curl -L https://github.com/docker/machine/releases/download/v#{DOCKER_MACHINE_VERSION}/docker-machine_darwin-amd64 > /usr/local/bin/docker-machine")
+        system("chmod +x /usr/local/bin/docker-machine")
+
+        system("curl -L https://github.com/docker/compose/releases/download/#{DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose")
+        system("chmod +x /usr/local/bin/docker-compose")
+
+        system("curl -L https://test.docker.com/builds/`uname -s`/`uname -m`/docker-#{DOCKER_VERSION} > /usr/local/bin/docker")
+        system("chmod +x /usr/local/bin/docker")
+      end
+
     end
   end
 end
