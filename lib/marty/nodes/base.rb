@@ -7,7 +7,6 @@ module Marty
 
     def execute
       before_create
-        #binding.pry
       puts cmd
       Open3.popen3(cmd) do |stdin, stdout, strerr|
         while line = stdout.gets

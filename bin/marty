@@ -7,7 +7,7 @@ exec /usr/bin/env ruby -x "$0" $*
 require 'rubygems'
 require 'bundler/setup'
 
-ROOT_PATH=File.dirname(File.expand_path('../', __FILE__))
+ROOT_PATH=File.dirname(File.realpath('../', __FILE__))
 $LOAD_PATH.unshift File.join(ROOT_PATH, 'lib')
 STDOUT.sync = true
 
