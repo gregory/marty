@@ -8,7 +8,7 @@ module Marty
     protected
 
     def default_engine_opts
-      super + [
+     super + [
         "--engine-label type=node",
         "--engine-opt dns-search=service.consul",
         "--engine-opt dns=172.17.0.1",

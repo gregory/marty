@@ -1,0 +1,34 @@
+#  Docker monitoring stack with cAdvisor and Prometheus
+#  http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/
+#  http://www.crccheck.com/blog/prometheus-contained/
+
+prometheus:
+  image: prom/prometheus
+  ports:
+    - "9090:9090"
+  extra_hosts:
+    - dockerhost:$$(ip route | awk '/docker0/ { print $$NF }')
+  volumes:
+    - ${PWD}/composes/metrics/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - ${PWD}/composes/metrics/data/prometheus:/prometheus
+  labels:
+        - "name=prometheus"
+        - "description=Core of Promethues"
+        - "version=0.16.1"
+  environment:
+    - SERVICE_NAME=prometheus
+
+grafana:
+  image: grafana/grafana
+  volumes:
+    - ${PWD}/metrics/data/grafana:/var/lib/grafana
+  ports:
+    - "3000:3000"
+  environment:
+    - GF_SECURITY_ADMIN_PASSWORD=secret
+  labels:
+    - "name=prom dashboard"
+    - "description=Dashboards for metrics"
+    - "version=latest"
+  environment:
+    - SERVICE_NAME=grafana

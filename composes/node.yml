@@ -21,3 +21,22 @@ registrator:
   command: -ip $NODE_IP consul://172.17.0.1:8500 # advertise NODE_IP and connect to the local consul
   labels:
     - constraint:type==node
+
+cadvisor:
+  image: google/cadvisor:latest
+  container_name: cadvisor
+  volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  ports:
+    - 8080:8080
+#sherdock:
+  #volumes:
+    #- /var/lib/docker:/var/lib/docker
+    #- /var/run/docker.sock:/var/run/docker.sock
+  #ports:
+    #- 8081:8080
+  #image: rancher/sherdock

@@ -27,6 +27,5 @@ module Marty
       ret, _ = Open3.capture2("docker-machine ip #{name}")
       ret.strip
     end
-
   end
 end
